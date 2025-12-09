@@ -6,6 +6,8 @@
 
 #include "FileHandler.hpp"
 
+// 6357 is too big
+
 int main()
 {
     std::vector<std::string> f = FileReader::readLines("./src/day1/input.txt");
@@ -24,19 +26,24 @@ int main()
         char dir = f[i][0];
         int amount = std::stoi(f[i].substr(1));
 
-        
-
         if (dir == 'L')
         {
-            x -= amount;
+            amount *= -1;
+            if (x == 0)
+            {
+                pass--;
+            }
         }
-        else if (dir == 'R')
-        {
-            x += amount;
-        }
+
+        x += amount;
 
         while (x < 0 || x > 99)
         {
+            if (x != 100)
+            {
+                pass++;
+            }
+
             if (x < 0)
             {
                 x = 100 + x; 
@@ -45,6 +52,7 @@ int main()
             {
                 x = 0 + (x - 100);
             }
+
         }
 
         if (x == 0)
@@ -52,7 +60,8 @@ int main()
             pass++;
         }
 
-        std::cout << f[i] << " points at: " << x << "\n";;
+
+        std::cout << f[i] << " points at: " << x << ". Current Password: " << pass <<"\n";;
     }
 
 
