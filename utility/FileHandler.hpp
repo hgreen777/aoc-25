@@ -5,6 +5,9 @@
 #include <vector>
 #include <stdexcept>
 #include <stdio.h>
+#include <iostream>
+
+#define DEBUG 0
 
 class FileReader {
 public:
@@ -25,6 +28,53 @@ public:
         }
 
         return lines;
+
+    }
+
+    static std::vector<std::string> readCSV(const std::string& filename)
+    {
+        std::ifstream file(filename);
+        std::vector<std::string> values;
+        std::string line;
+        std::string value;
+
+        if (!file.is_open())
+        {
+            throw std::runtime_error("Failed to open input file: " + filename);
+        }
+
+        while (std::getline(file, line))
+        {
+            while (line.find(',') != std::string::npos)
+            {
+                int pos = line.find(',');
+
+                if (DEBUG)
+                {
+                    std::cout << pos << ": ";
+                }
+                values.push_back(line.substr(0,pos));
+
+                if (DEBUG)
+                {
+                    std::cout << line.substr(0,pos) << "\n";
+                }
+
+                line = line.substr(pos + 1);
+
+                if (DEBUG)
+                {
+                    std::cout << line << "\n";
+                }
+            }
+
+            values.push_back(line);
+        }
+        if (DEBUG)
+        {
+            std::cout << std::endl;
+        }
+        return values;
 
     }
 
