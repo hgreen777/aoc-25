@@ -1,0 +1,2 @@
+g++ -I utility src/day1/main.cpp -o src/day1/c
+./src/day1/c
