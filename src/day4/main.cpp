@@ -1,6 +1,6 @@
 // Day 4
 // Part 1: 1547
-// Part 2:
+// Part 2: 8948
 
 #include <iostream>
 #include <string>
@@ -11,56 +11,65 @@
 int main()
 {
     std::vector<std::string> f = FileReader::readLines("src/day4/input.txt");
+    std::vector<std::string> fPrime(f.begin(), f.end());
 
     int total = 0;
+    int difference = -1;
     int currentCount = 0;
     int checkX,checkY;
 
-
-    for (int y = 0; y < f.size(); y++)
+    while (difference != 0)
     {
-        for (int x = 0; x < f[0].size(); x++)
+        difference = 0;
+        for (int y = 0; y < f.size(); y++)
         {
-            if (f[y][x] == '.')
+            for (int x = 0; x < f[0].size(); x++)
             {
-                continue;
-            }
-
-            currentCount = 0;
-
-
-            // For each square apply kernal, check bounds. 
-            for (int kernelY = -1; kernelY < 2; kernelY++)
-            {
-                for (int kernelX = -1; kernelX < 2; kernelX++)
+                if (f[y][x] == '.')
                 {
-                    // Dont include current position
-                    if (kernelX == 0 && kernelY == 0)
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    checkX = x + kernelX;
-                    checkY = y + kernelY;
+                currentCount = 0;
 
-                    // Bounds check
-                    if (checkY >= 0 && checkY < f.size() && checkX >= 0 && checkX < f[0].size())
+
+                // For each square apply kernal, check bounds. 
+                for (int kernelY = -1; kernelY < 2; kernelY++)
+                {
+                    for (int kernelX = -1; kernelX < 2; kernelX++)
                     {
-                        if (f[checkY][checkX] == '@')
+                        // Dont include current position
+                        if (kernelX == 0 && kernelY == 0)
                         {
-                            currentCount++;
+                            continue;
                         }
 
+                        checkX = x + kernelX;
+                        checkY = y + kernelY;
+
+                        // Bounds check
+                        if (checkY >= 0 && checkY < f.size() && checkX >= 0 && checkX < f[0].size())
+                        {
+                            if (f[checkY][checkX] == '@')
+                            {
+                                currentCount++;
+                            }
+
+                        }
                     }
                 }
-            }
 
-            if (currentCount < 4)
-            {
-                total++;
-                std::cout << "Current Count: " << currentCount << ". For (" << x << ", " << y << ")" << "\n";
+                if (currentCount < 4)
+                {
+                    fPrime[y][x] = '.';
+                    difference++;
+                    std::cout << "Current Count: " << currentCount << ". For (" << x << ", " << y << ")" << "\n";
+                }
             }
         }
+
+        f = std::vector<std::string>(fPrime.begin(), fPrime.end());
+        total += difference;
     }
 
     std::cout << total << "\n";
