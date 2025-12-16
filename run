@@ -1,2 +1,5 @@
-g++ -I utility src/day1/main.cpp -o src/day1/c
+g++ -I utility src/day1/part1.cpp -o src/day1/c
 ./src/day1/c
+
+g++ -I utility src/day1/part2.cpp -o src/day1/c2
+./src/day1/c2
