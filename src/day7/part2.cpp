@@ -1,10 +1,10 @@
 // Day 7
-// Part 1: 1581
+// Part 2: 73007003089792
 
 #include <iostream>
 #include <string>
 #include <vector>
-#include <set>
+#include <map>
 
 #include "FileHandler.hpp"
 #include "StrUtility.hpp"
@@ -18,9 +18,9 @@ int main()
     std::cout << "Hello World";
     std::vector<std::string> f = FileReader::readLines("src/day7/input.txt");
 
-    std::vector<int> currentRow;
-    std::vector<int> nextRow;
-    int splitTotal = 0;
+    std::map<int, long long> currentRow;
+    std::map<int, long long> nextRow;
+    long long total = 0;
 
     // Find Start
     for (int col = 0; col < f[0].size(); col++)
@@ -28,26 +28,26 @@ int main()
         if (f[0][col] == 'S')
         {
             std::cout << "Starting Position: " << col << "\n";
-            currentRow.emplace_back(col);
+            currentRow[col] = 1L; // Sets it to 1 path to start pos.
             break;
         }
     }
 
+    // Uses map to keep track of paths to that col.
     for (int i = 0; i < f.size() - 1; i++)
     {
-        for (int col : currentRow)
+        for (std::pair<int, long long> col : currentRow)
         {
-            char next = f[i + 1][col]; 
+            char next = f[i + 1][col.first]; 
             if (next == '.')
             {
-                nextRow.emplace_back(col);
+                nextRow[col.first] += col.second;
             }
             else
             {
-                splitTotal++;
-                std::cout << "Split at: (" << i+1 << ", " << col << "). Current Total Now: " << splitTotal << "\n";
-                nextRow.emplace_back(col-1);
-                nextRow.emplace_back(col+1);
+                std::cout << "Split at: (" << i+1 << ", " << col.first << "). Current Ways to get there: " << col.second << "\n";
+                nextRow[col.first - 1] += col.second;
+                nextRow[col.first + 1] += col.second;
             }
         }
 
@@ -65,8 +65,12 @@ int main()
                 // increase counter
     }
 
+    for (std::pair<int, long long> col : currentRow)
+    {
+        total += col.second;
+    }
 
         
-    std::cout << "Part 1 Total: " << splitTotal;
+    std::cout << "Part 2 Total: " << total;
     std::cout << std::endl;
 }
